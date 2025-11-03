@@ -23,15 +23,6 @@ export default function SignInPage() {
             <button className="border border-gray-300 rounded-md px-3 py-2 hover:bg-gray-100 transition">
               <Image src="/google.svg" alt="Google" width={24} height={24} />
             </button>
-            <button className="border border-gray-300 rounded-md px-3 py-2 hover:bg-gray-100 transition">
-              <Image
-                src="/facebook.svg"
-                alt="Facebook"
-                width={28}
-                height={28}
-                className="object-contain scale-150"
-              />
-            </button>
           </div>
 
           <p className="text-gray-500 text-sm mb-4">
