@@ -1,15 +1,30 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import { prisma } from "./prisma";
+// lib/auth.ts
+import { PrismaClient } from "@/app/generated/prisma/client";
+import { betterAuth } from "better-auth";
+import { prismaAdapter } from "better-auth/adapters/prisma";
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
-  adapter: PrismaAdapter(prisma),
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
-    }),
-    // ...add more providers here
-  ],
+const prisma = new PrismaClient();
+
+export const auth = betterAuth({
+  database: prismaAdapter(prisma, {
+    provider: "postgresql", // sesuaikan dengan database Anda (postgresql/mysql/sqlite)
+  }),
+  emailAndPassword: {
+    enabled: true,
+    requireEmailVerification: false, // set false agar langsung bisa signup
+  },
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    },
+  },
+  trustedOrigins: ["http://localhost:3000"],
+  secret: process.env.BETTER_AUTH_SECRET,
+  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
 });
+
+export type Session = typeof auth.$Infer.Session;
+
+// Export untuk debugging
+export { prisma };
