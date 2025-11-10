@@ -14,7 +14,6 @@ export default function SignInPage() {
     password: "",
   });
 
-  // State untuk show/hide password
   const [showPassword, setShowPassword] = useState(false);
   const [focusPassword, setFocusPassword] = useState(false);
 
@@ -41,10 +40,15 @@ export default function SignInPage() {
         alert(result.error.message);
         return;
       }
+
       alert("Kamu berhasil login");
       router.push("/loggedIn");
-    } catch (error) {
-      console.error(error);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      } else {
+        console.error(error);
+      }
       alert("Terjadi kesalahan jaringan.");
     }
   };
@@ -59,15 +63,6 @@ export default function SignInPage() {
           <div className="flex gap-4 mb-4">
             <button className="border border-gray-300 rounded-md px-3 py-2 hover:bg-gray-100 transition">
               <Image src="/google.svg" alt="Google" width={24} height={24} />
-            </button>
-            <button className="border border-gray-300 rounded-md px-3 py-2 hover:bg-gray-100 transition">
-              <Image
-                src="/facebook.svg"
-                alt="Facebook"
-                width={28}
-                height={28}
-                className="object-contain scale-150"
-              />
             </button>
           </div>
 
@@ -102,7 +97,7 @@ export default function SignInPage() {
               />
               <button
                 type="button"
-                onMouseDown={(e) => e.preventDefault()} // cegah kehilangan fokus
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={() => setShowPassword(!showPassword)}
                 className={`absolute inset-y-0 right-3 flex items-center text-gray-500 
                            hover:text-[#4F7F8C] transition-opacity duration-300 ${
@@ -115,7 +110,11 @@ export default function SignInPage() {
               </button>
             </div>
 
-            <div className="text-center text-sm text-gray-500 cursor-pointer hover:underline">
+            {/* Tombol Lupa Password */}
+            <div
+              className="text-center text-sm text-gray-500 cursor-pointer hover:underline"
+              onClick={() => router.push("/forgotpassword")}
+            >
               Lupa password?
             </div>
 
@@ -147,7 +146,7 @@ export default function SignInPage() {
               Daftar dengan data personal Anda untuk mendapatkan semua fitur
             </p>
             <button
-              onClick={() => router.push("/signUp")}
+              onClick={() => router.push("/signup")}
               className="mt-4 border border-white text-white py-2 px-6 rounded-md hover:bg-white hover:text-[#4F7F8C] transition"
             >
               SIGN UP
