@@ -11,7 +11,7 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: false, // set false agar langsung bisa signup
+    requireEmailVerification: false,
   },
   socialProviders: {
     google: {
@@ -19,12 +19,6 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     },
   },
-  trustedOrigins: ["http://localhost:3000"],
   secret: process.env.BETTER_AUTH_SECRET,
-  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+  baseURL: process.env.BETTER_AUTH_URL,
 });
-
-export type Session = typeof auth.$Infer.Session;
-
-// Export untuk debugging
-export { prisma };

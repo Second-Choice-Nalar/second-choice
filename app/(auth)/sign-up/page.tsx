@@ -38,6 +38,7 @@ export default function SignUpPage() {
     console.log(JSON.stringify(form));
   };
 
+  //Sign up by email
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -46,39 +47,8 @@ export default function SignUpPage() {
       return;
     }
 
-    const parsed = signUpSchema.safeParse(form);
-    if (!parsed.success) {
-      alert(parsed.error.message);
-      return;
-    }
-
-    try {
-      setLoading(true);
-
-      const res = await fetch("/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "SignUp Failed");
-      }
-
-      console.log("User:", data.user);
-
-      alert("akun berhasil dibuat");
-      router.push("/loggedIn");
-    } catch (error) {
-      console.error(error);
-      alert("Terjadi kesalahan jaringan.");
-    } finally {
-      setLoading(false);
-    }
+    await authClient.signUp.email(form);
+    router.push("/");
   };
 
   return (
@@ -100,7 +70,7 @@ export default function SignUpPage() {
               Masukkan detail pribadi Anda untuk menggunakan semua fitur situs
             </p>
             <button
-              onClick={() => router.push("/signIn")}
+              onClick={() => router.push("/sign-in")}
               className="mt-4 border border-white text-white py-2 px-6 rounded-md hover:bg-white hover:text-[#4F7F8C] transition"
             >
               SIGN IN

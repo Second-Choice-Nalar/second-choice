@@ -22,6 +22,15 @@ export default function SignInPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleGoogle = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/",
+    });
+
+    console.log(JSON.stringify(form));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -42,7 +51,7 @@ export default function SignInPage() {
         return;
       }
       alert("Kamu berhasil login");
-      router.push("/loggedIn");
+      router.push("/");
     } catch (error) {
       console.error(error);
       alert("Terjadi kesalahan jaringan.");
@@ -58,15 +67,12 @@ export default function SignInPage() {
 
           <div className="flex gap-4 mb-4">
             <button className="border border-gray-300 rounded-md px-3 py-2 hover:bg-gray-100 transition">
-              <Image src="/google.svg" alt="Google" width={24} height={24} />
-            </button>
-            <button className="border border-gray-300 rounded-md px-3 py-2 hover:bg-gray-100 transition">
               <Image
-                src="/facebook.svg"
-                alt="Facebook"
-                width={28}
-                height={28}
-                className="object-contain scale-150"
+                src="/google.svg"
+                alt="Google"
+                width={24}
+                height={24}
+                onClick={handleGoogle}
               />
             </button>
           </div>
@@ -147,7 +153,7 @@ export default function SignInPage() {
               Daftar dengan data personal Anda untuk mendapatkan semua fitur
             </p>
             <button
-              onClick={() => router.push("/signUp")}
+              onClick={() => router.push("sign-up")}
               className="mt-4 border border-white text-white py-2 px-6 rounded-md hover:bg-white hover:text-[#4F7F8C] transition"
             >
               SIGN UP

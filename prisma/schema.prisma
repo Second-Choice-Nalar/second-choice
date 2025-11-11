@@ -75,17 +75,17 @@ model User {
   updatedAt     DateTime @updatedAt
 
   // Relations
-  campus              Campus?        @relation(fields: [campusId], references: [id])
-  products            Product[]      @relation("SellerProducts")
-  locations           Location[]
-  conversations       Conversation[] @relation("BuyerConversations")
-  sellerConversations Conversation[] @relation("SellerConversations")
-  favorites           Favorite[]
-  givenReviews        Review[]       @relation("GivenReviews")
-  receivedReviews     Review[]       @relation("ReceivedReviews")
-  sentMessages        Message[]
-  Account             Account[]
-  Session             Session[]
+  campus    Campus?    @relation(fields: [campusId], references: [id])
+  products  Product[]  @relation("SellerProducts")
+  locations Location[]
+  favorites Favorite[]
+  Account   Account[]
+  Session   Session[]
+  // conversations       Conversation[] @relation("BuyerConversations")
+  // sellerConversations Conversation[] @relation("SellerConversations")
+  // givenReviews        Review[]       @relation("GivenReviews")
+  // receivedReviews     Review[]       @relation("ReceivedReviews")
+  // sentMessages        Message[]
 
   @@index([campusId])
   @@index([email])
@@ -99,29 +99,26 @@ enum ProductStatus {
 }
 
 model Product {
-  id            String        @id @default(cuid())
-  title         String
-  description   String        @db.Text
-  price         Int
-  status        ProductStatus @default(AVAILABLE)
-  campusId      String?
-  sellerId      String
-  viewCount     Int           @default(0)
-  favoriteCount Int           @default(0)
-  rating        Float?        @default(0)
-  totalReviews  Int           @default(0)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id          String        @id @default(cuid())
+  productName String
+  description String        @db.Text
+  price       Int
+  status      ProductStatus @default(AVAILABLE)
+  campusId    String?
+  sellerId    String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
   // Relations
-  seller        User           @relation("SellerProducts", fields: [sellerId], references: [id], onDelete: Cascade)
-  campus        Campus?        @relation(fields: [campusId], references: [id])
-  images        ProductImage[]
-  conversations Conversation[]
-  favorites     Favorite[]
-  reviews       Review[]
-  Location      Location?      @relation(fields: [locationId], references: [id])
-  locationId    String?
+  seller     User           @relation("SellerProducts", fields: [sellerId], references: [id], onDelete: Cascade)
+  campus     Campus?        @relation(fields: [campusId], references: [id])
+  images     ProductImage[]
+  // conversations Conversation[]
+  favorites  Favorite[]
+  Location   Location?      @relation(fields: [locationId], references: [id])
+  locationId String?
+  category   Category?      @relation(fields: [categoryId], references: [id])
+  categoryId Int?
 
   @@index([sellerId])
   @@index([campusId])
@@ -136,6 +133,15 @@ model ProductImage {
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@index([productId])
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String
+  slug      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Campus {
@@ -162,42 +168,42 @@ model Location {
   @@index([campusId])
 }
 
-model Conversation {
-  id        String   @id @default(cuid())
-  productId String
-  buyerId   String
-  sellerId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// model Conversation {
+//   id        String   @id @default(cuid())
+//   productId String
+//   buyerId   String
+//   sellerId  String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
 
-  // Relations
-  product  Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
-  buyer    User      @relation("BuyerConversations", fields: [buyerId], references: [id], onDelete: Cascade)
-  seller   User      @relation("SellerConversations", fields: [sellerId], references: [id], onDelete: Cascade)
-  messages Message[]
+//   // Relations
+//   product  Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+//   buyer    User      @relation("BuyerConversations", fields: [buyerId], references: [id], onDelete: Cascade)
+//   seller   User      @relation("SellerConversations", fields: [sellerId], references: [id], onDelete: Cascade)
+//   messages Message[]
 
-  @@unique([productId, buyerId])
-  @@index([buyerId])
-  @@index([sellerId])
-  @@index([productId])
-}
+//   @@unique([productId, buyerId])
+//   @@index([buyerId])
+//   @@index([sellerId])
+//   @@index([productId])
+// }
 
-model Message {
-  id             String   @id @default(cuid())
-  conversationId String
-  senderId       String
-  content        String   @db.Text
-  isRead         Boolean  @default(false)
-  createdAt      DateTime @default(now())
+// model Message {
+//   id             String   @id @default(cuid())
+//   conversationId String
+//   senderId       String
+//   content        String   @db.Text
+//   isRead         Boolean  @default(false)
+//   createdAt      DateTime @default(now())
 
-  // Relations
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  sender       User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+//   // Relations
+//   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+//   sender       User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
 
-  @@index([conversationId])
-  @@index([senderId])
-  @@index([createdAt])
-}
+//   @@index([conversationId])
+//   @@index([senderId])
+//   @@index([createdAt])
+// }
 
 model Favorite {
   id        String   @id @default(cuid())
@@ -214,29 +220,29 @@ model Favorite {
   @@index([productId])
 }
 
-enum ReviewType {
-  SELLER
-  PRODUCT
-}
+// enum ReviewType {
+//   SELLER
+//   PRODUCT
+// }
 
-model Review {
-  id         String     @id @default(cuid())
-  type       ReviewType
-  rating     Int // 1-5
-  comment    String?    @db.Text
-  reviewerId String
-  sellerId   String? // untuk review seller
-  productId  String? // untuk review product
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+// model Review {
+//   id         String     @id @default(cuid())
+//   type       ReviewType
+//   rating     Int // 1-5
+//   comment    String?    @db.Text
+//   reviewerId String
+//   sellerId   String? // untuk review seller
+//   productId  String? // untuk review product
+//   createdAt  DateTime   @default(now())
+//   updatedAt  DateTime   @updatedAt
 
-  // Relations
-  reviewer User     @relation("GivenReviews", fields: [reviewerId], references: [id], onDelete: Cascade)
-  seller   User?    @relation("ReceivedReviews", fields: [sellerId], references: [id], onDelete: Cascade)
-  product  Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+//   // Relations
+//   reviewer User     @relation("GivenReviews", fields: [reviewerId], references: [id], onDelete: Cascade)
+//   seller   User?    @relation("ReceivedReviews", fields: [sellerId], references: [id], onDelete: Cascade)
+//   product  Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  @@index([reviewerId])
-  @@index([sellerId])
-  @@index([productId])
-  @@index([type])
-}
+//   @@index([reviewerId])
+//   @@index([sellerId])
+//   @@index([productId])
+//   @@index([type])
+// }
