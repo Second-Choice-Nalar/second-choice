@@ -1,11 +1,20 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Upload, Save, Send, X } from "lucide-react";
+import axios from "axios";
+import { Campus, Category } from "../generated/prisma/client";
+import Select from "react-select";
 
 type ImagePreview = { file: File; url: string };
+interface SelectOption {
+  value: string;
+  label: string;
+}
 
 export default function AddProduct() {
+  const [campusOptions, setCampusOptions] = useState<SelectOption[]>([]);
+  const [categoryOptions, setCategoryOptions] = useState<SelectOption[]>([]);
   const [product, setProduct] = useState({
     name: "",
     description: "",
@@ -18,10 +27,50 @@ export default function AddProduct() {
   const [images, setImages] = useState<ImagePreview[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  // Fetch data kampus dan kategori dari API saat komponen pertama kali dimuat
+  useEffect(() => {
+    const fetchOptions = async () => {
+      // Fetch data kampus
+      const campusResponse = await axios.get("/api/campuses");
+      const campusData = campusResponse.data;
+      const campusOptions: SelectOption[] = campusData.map(
+        (campus: Campus) => ({
+          value: campus.id,
+          label: campus.name,
+        })
+      );
+
+      // Fetch data kategori
+      const categoryResponse = await axios.get("/api/categories");
+      const categoryData = categoryResponse.data;
+      const categoryOptions: SelectOption[] = categoryData.map(
+        (category: Category) => ({
+          value: category.id,
+          label: category.name,
+        })
+      );
+
+      setCampusOptions(campusOptions);
+      setCategoryOptions(categoryOptions);
+    };
+
+    fetchOptions();
+  }, []); // Hanya dipanggil sekali setelah komponen dimuat
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setProduct({ ...product, [e.target.name]: e.target.value });
+  };
+
+  // Fungsi untuk meng-handle perubahan di select (Kampus)
+  const handleCampusChange = (selectedOption: SelectOption | null) => {
+    setProduct({ ...product, campus: selectedOption?.value ?? "" });
+  };
+
+  // Fungsi untuk meng-handle perubahan di select (Kategori)
+  const handleCategoryChange = (selectedOption: SelectOption | null) => {
+    setProduct({ ...product, category: selectedOption?.value ?? "" });
   };
 
   // Upload handler: buat object URL sekali, simpan url di state
@@ -66,8 +115,33 @@ export default function AddProduct() {
   }, [images]);
 
   const handleSaveDraft = () => {
-    // contoh: tampil alert, nanti bisa diubah untuk POST ke backend
     alert("Draft produk disimpan sementara ✅");
+  };
+
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+
+    formData.append("name", product.name);
+    formData.append("description", product.description);
+    formData.append("stock", product.stock);
+    formData.append("price", product.price);
+    formData.append("category", product.category);
+    formData.append("campus", product.campus);
+
+    for (const img of images) {
+      formData.append("images", img.file);
+    }
+
+    try {
+      const response = await axios.post("api/products", formData);
+
+      console.log("Produk berhasil di upload");
+    } catch (error) {
+      console.error("Gagal mempublikasikan produk:", error);
+      alert("Gagal mempublikasikan produk. Cek console untuk detail.");
+    }
   };
 
   return (
@@ -85,7 +159,9 @@ export default function AddProduct() {
 
       {/* Header */}
       <div className="max-w-4xl w-full mb-8">
-        <h1 className="text-2xl font-bold text-[#008080]">Tambah Produk Baru</h1>
+        <h1 className="text-2xl font-bold text-[#008080]">
+          Tambah Produk Baru
+        </h1>
         <p className="text-gray-500 text-sm mt-1">
           Lengkapi detail produk untuk ditampilkan di marketplace
         </p>
@@ -93,7 +169,9 @@ export default function AddProduct() {
 
       {/* Informasi Dasar */}
       <div className="bg-white w-full max-w-4xl rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-1">Informasi Dasar</h2>
+        <h2 className="text-lg font-semibold text-gray-800 mb-1">
+          Informasi Dasar
+        </h2>
         <p className="text-sm text-gray-500 mb-5">Detail utama produk anda</p>
 
         {/* Nama Produk */}
@@ -125,7 +203,9 @@ export default function AddProduct() {
         {/* Harga, Kategori, Stok */}
         <div className="grid grid-cols-3 gap-4 mb-6">
           <label className="block">
-            <span className="text-sm font-medium text-gray-700">Harga (Rp)</span>
+            <span className="text-sm font-medium text-gray-700">
+              Harga (Rp)
+            </span>
             <input
               type="number"
               name="price"
@@ -136,18 +216,22 @@ export default function AddProduct() {
             />
           </label>
 
+          {/* Kategori - React Select */}
           <label className="block">
             <span className="text-sm font-medium text-gray-700">Kategori</span>
-            <input
-              type="text"
-              name="category"
+            <Select
+              instanceId="kategori-select"
+              value={categoryOptions.find(
+                (option) => option.value === product.category
+              )}
+              onChange={handleCategoryChange}
+              options={categoryOptions}
               placeholder="Pilih kategori"
-              value={product.category}
-              onChange={handleChange}
-              className="mt-1 w-full border border-gray-300 rounded-lg bg-[#f8f8f8] px-3 py-2 text-black focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm"
+              isSearchable={true}
             />
           </label>
 
+          {/* Stok */}
           <label className="block">
             <span className="text-sm font-medium text-gray-700">Stok</span>
             <input
@@ -161,23 +245,27 @@ export default function AddProduct() {
           </label>
         </div>
 
-        {/* Kampus */}
-        <label className="block">
+        {/* Kampus - React Select */}
+        <label className="block mb-6">
           <span className="text-sm font-medium text-gray-700">Kampus</span>
-          <input
-            type="text"
-            name="campus"
-            placeholder="Masukkan nama universitas atau kampus"
-            value={product.campus}
-            onChange={handleChange}
-            className="mt-1 w-full border border-gray-300 rounded-lg bg-[#f8f8f8] px-3 py-2 text-black focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm"
+          <Select
+            instanceId="kampus-select"
+            value={campusOptions.find(
+              (option) => option.value === product.campus
+            )}
+            onChange={handleCampusChange}
+            options={campusOptions}
+            placeholder="Pilih campus"
+            isSearchable={true}
           />
         </label>
       </div>
 
       {/* Gambar Produk */}
       <div className="bg-white w-full max-w-4xl rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
-        <h2 className="text-lg font-semibold text-gray-800 mb-1">Gambar Produk</h2>
+        <h2 className="text-lg font-semibold text-gray-800 mb-1">
+          Gambar Produk
+        </h2>
         <p className="text-sm text-gray-500 mb-5">Tambah maksimal 10 foto</p>
 
         {/* Upload Box */}
@@ -228,7 +316,10 @@ export default function AddProduct() {
         >
           <Save size={16} className="mr-2" /> Simpan Draft
         </button>
-        <button className="flex items-center bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded-lg transition text-sm font-medium">
+        <button
+          onClick={handleSubmit}
+          className="flex items-center bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded-lg transition text-sm font-medium"
+        >
           <Send size={16} className="mr-2" /> Publikasikan
         </button>
       </div>

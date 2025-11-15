@@ -103,6 +103,7 @@ model Product {
   productName String
   description String        @db.Text
   price       Int
+  stock       Int
   status      ProductStatus @default(AVAILABLE)
   campusId    String?
   sellerId    String
@@ -115,8 +116,8 @@ model Product {
   images     ProductImage[]
   // conversations Conversation[]
   favorites  Favorite[]
-  Location   Location?      @relation(fields: [locationId], references: [id])
-  locationId String?
+  // Location   Location?      @relation(fields: [locationId], references: [id])
+  // locationId String?
   category   Category?      @relation(fields: [categoryId], references: [id])
   categoryId Int?
 
@@ -136,12 +137,10 @@ model ProductImage {
 }
 
 model Category {
-  id        Int       @id @default(autoincrement())
-  name      String
-  slug      String    @unique
-  products  Product[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id       Int       @id @default(autoincrement())
+  name     String
+  slug     String    @unique
+  products Product[]
 }
 
 model Campus {
@@ -160,9 +159,9 @@ model Location {
   userId   String?
 
   // Relations
-  campus   Campus?   @relation(fields: [campusId], references: [id])
-  user     User?     @relation(fields: [userId], references: [id])
-  products Product[]
+  campus Campus? @relation(fields: [campusId], references: [id])
+  user   User?   @relation(fields: [userId], references: [id])
+  // products Product[]
 
   @@index([userId])
   @@index([campusId])
