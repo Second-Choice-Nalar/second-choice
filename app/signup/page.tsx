@@ -100,7 +100,7 @@ export default function SignUpPage() {
               Masukkan detail pribadi Anda untuk menggunakan semua fitur situs
             </p>
             <button
-              onClick={() => router.push("/signin")}
+              onClick={() => router.push("/signIn")}
               className="mt-4 border border-white text-white py-2 px-6 rounded-md hover:bg-white hover:text-[#4F7F8C] transition"
             >
               SIGN IN
