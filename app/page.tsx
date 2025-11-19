@@ -1,50 +1,24 @@
-"use client";
-// import { authClient } from "@/lib/auth-client";
-import { useEffect, useState } from "react";
+import Navbar from "./components/NavBar";
+import CategoryFilter from "./components/CategoryFilter";
+import ProductGrid from "./components/ProductGrid";
 
-export default function LoggedIn() {
-  const [users, setUsers] = useState<[{ name?: string; email?: string }]>([{}]);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const res = await fetch("/api/users");
-      const data = await res.json();
-      setUsers(data);
-    };
-
-    fetchUsers();
-  }, []);
-
-  console.log(users);
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     const session = await authClient.getSession();
-  //     if (session?.data?.user) {
-  //       setUser({
-  //         email: session?.data.user.email,
-  //         name: session?.data.user.name,
-  //       });
-  //     }
-  //   };
-  //   fetchUser();
-
-  //   console.log(fetchUsernames.name);
-  // }, []);
+export default function HomePage() {
   return (
-    // <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-    //   {/* <h1 className="text-3xl font-bold">Halo, {user?.name} 👋</h1>
-    //   <p className="text-gray-600 mt-2">Email kamu: {user!.email}</p> */}
-    //   <h1>Hai</h1>
-    // </div>
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-      <h1 className="text-3xl font-bold mb-4">Daftar User</h1>
-      <ul>
-        {users.map((u, i) => (
-          <li key={i} className="text-gray-700">
-            {u.email}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <main className="min-h-screen bg-gray-50">
+      <Navbar />
+
+      {/* Kategori - nempel kiri tapi dengan jarak halus */}
+      <div className="w-full pl-4 mt-3">
+        <CategoryFilter />
+      </div>
+
+      {/* Produk tetap di tengah */}
+      <section className="max-w-[1500px] mx-auto p-6">
+        <h2 className="text-xl font-semibold mt-6 mb-4 text-black">
+          Semua Barang
+        </h2>
+        <ProductGrid />
+      </section>
+    </main>
   );
 }
