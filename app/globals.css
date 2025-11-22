@@ -5,17 +5,10 @@
   --foreground: #171717;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-/* Removed nonstandard @theme at-rule; variables moved to :root above */
+  /* Removed nonstandard @theme at-rule; variables moved to :root above */
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
