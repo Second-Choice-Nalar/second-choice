@@ -1,7 +1,6 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { supabaseService } from "@/lib/supabase-server";
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -16,7 +15,7 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     //Cek session dan dapetin user.id
-    const session = await auth.api.getSession({ headers: await headers() });
+    const session = await auth.api.getSession({ headers: req.headers });
     if (!session || !session.user) {
       return NextResponse.json(
         { error: "User is not authenticated" },

@@ -39,16 +39,16 @@ async function main() {
   console.log("✅ Seeding done: campus list inserted/updated.");
 
   const kecamatanList = [
-    { name: "Gunungpati", city: "Semarang" },
-    { name: "Tembalang", city: "Semarang" },
-    { name: "Gondokusuman", city: "Yogyakarta" },
-    { name: "Sukajadi", city: "Bandung" },
-    { name: "Beji", city: "Depok" },
-    { name: "Lowokwaru", city: "Malang" },
-    { name: "Gubeng", city: "Surabaya" },
-    { name: "Medan Baru", city: "Medan" },
-    { name: "Tegalsari", city: "Surabaya" },
-    { name: "Cicendo", city: "Bandung" },
+    { name: "Gunungpati", kecamatan: "Semarang" },
+    { name: "Tembalang", kecamatan: "Semarang" },
+    { name: "Gondokusuman", kecamatan: "Yogyakarta" },
+    { name: "Sukajadi", kecamatan: "Bandung" },
+    { name: "Beji", kecamatan: "Depok" },
+    { name: "Lowokwaru", kecamatan: "Malang" },
+    { name: "Gubeng", kecamatan: "Surabaya" },
+    { name: "Medan Baru", kecamatan: "Medan" },
+    { name: "Tegalsari", kecamatan: "Surabaya" },
+    { name: "Cicendo", kecamatan: "Bandung" },
   ];
 
   await prisma.location.createMany({

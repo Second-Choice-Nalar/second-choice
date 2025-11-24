@@ -11,7 +11,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Session {
@@ -62,25 +61,25 @@ model Verification {
 }
 
 model User {
-  id            String   @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String
-  email         String   @unique
-  emailVerified Boolean  @default(false)
+  email         String     @unique
+  emailVerified Boolean    @default(false)
   image         String?
   phoneNumber   String?
   campusId      String?
-  rating        Float?   @default(0)
-  totalReviews  Int      @default(0)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
+  rating        Float?     @default(0)
+  totalReviews  Int        @default(0)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  locationId    String?
   // Relations
-  campus    Campus?    @relation(fields: [campusId], references: [id])
-  products  Product[]  @relation("SellerProducts")
-  locations Location[]
-  favorites Favorite[]
-  Account   Account[]
-  Session   Session[]
+  campus        Campus?    @relation(fields: [campusId], references: [id])
+  products      Product[]  @relation("SellerProducts")
+  location      Location?  @relation(fields: [locationId], references: [id])
+  favorites     Favorite[]
+  Account       Account[]
+  Session       Session[]
   // conversations       Conversation[] @relation("BuyerConversations")
   // sellerConversations Conversation[] @relation("SellerConversations")
   // givenReviews        Review[]       @relation("GivenReviews")
@@ -116,8 +115,8 @@ model Product {
   images     ProductImage[]
   // conversations Conversation[]
   favorites  Favorite[]
-  // Location   Location?      @relation(fields: [locationId], references: [id])
-  // locationId String?
+  Location   Location?      @relation(fields: [locationId], references: [id])
+  locationId String?
   category   Category?      @relation(fields: [categoryId], references: [id])
   categoryId Int?
 
@@ -144,27 +143,21 @@ model Category {
 }
 
 model Campus {
-  id        String     @id @default(cuid())
-  name      String     @unique
-  users     User[]
-  products  Product[]
-  locations Location[]
+  id       String    @id @default(cuid())
+  name     String    @unique
+  users    User[]
+  products Product[]
+  // locations Location[]
 }
 
 model Location {
-  id       String  @id @default(cuid())
-  name     String  @unique
-  city     String
-  campusId String?
-  userId   String?
+  id        String @id @default(cuid())
+  name      String @unique
+  kecamatan String
 
   // Relations
-  campus Campus? @relation(fields: [campusId], references: [id])
-  user   User?   @relation(fields: [userId], references: [id])
-  // products Product[]
-
-  @@index([userId])
-  @@index([campusId])
+  products Product[]
+  user     User[]
 }
 
 // model Conversation {
