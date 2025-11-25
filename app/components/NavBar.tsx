@@ -40,7 +40,10 @@ export default function Navbar() {
               placeholder="Cari barang bekas..."
               className="w-full border border-gray-300 rounded-[6px] pl-10 pr-4 py-3 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
             />
-            <Search className="absolute left-3 top-3.5 text-gray-400" size={18} />
+            <Search
+              className="absolute left-3 top-3.5 text-gray-400"
+              size={18}
+            />
           </div>
         </div>
 
@@ -56,13 +59,19 @@ export default function Navbar() {
 
           {/* Ikon */}
           <div className="flex items-center space-x-5">
-            <Link href="/notifications" className="text-gray-700 hover:text-blue-600">
+            <Link
+              href="/notifications"
+              className="text-gray-700 hover:text-blue-600"
+            >
               <Bell size={22} />
             </Link>
             <Link href="/chat" className="text-gray-700 hover:text-blue-600">
               <MessageSquare size={22} />
             </Link>
-            <Link href="/favorites" className="text-gray-700 hover:text-blue-600">
+            <Link
+              href="/favorites"
+              className="text-gray-700 hover:text-blue-600"
+            >
               <Heart size={22} />
             </Link>
             <Link href="/profile" className="text-gray-700 hover:text-blue-600">
@@ -96,7 +105,10 @@ export default function Navbar() {
               placeholder="Cari barang bekas..."
               className="w-full border border-gray-300 rounded-md pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
+            <Search
+              className="absolute left-3 top-2.5 text-gray-400"
+              size={18}
+            />
           </div>
 
           {/* Tombol Jual di menu mobile */}
@@ -108,13 +120,19 @@ export default function Navbar() {
           </Link>
 
           <div className="flex space-x-6">
-            <Link href="/notifications" className="text-gray-700 hover:text-blue-600">
+            <Link
+              href="/notifications"
+              className="text-gray-700 hover:text-blue-600"
+            >
               <Bell size={22} />
             </Link>
             <Link href="/chat" className="text-gray-700 hover:text-blue-600">
               <MessageSquare size={22} />
             </Link>
-            <Link href="/favorites" className="text-gray-700 hover:text-blue-600">
+            <Link
+              href="/favorites"
+              className="text-gray-700 hover:text-blue-600"
+            >
               <Heart size={22} />
             </Link>
             <Link href="/profile" className="text-gray-700 hover:text-blue-600">

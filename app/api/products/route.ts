@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { supabaseService } from "@/lib/supabase-server";
 import { NextResponse } from "next/server";
 

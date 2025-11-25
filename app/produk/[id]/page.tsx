@@ -36,35 +36,36 @@ export default function ProductDetailPage() {
 
     const fetchData = async () => {
       try {
-        const res = {
-          data: {
-            id: "cmhw5ck0e0001hpu0jwdomruy",
-            productName: "Celana Jeans",
-            description: "Celana Panjang Ukuran XL",
-            price: 10000,
-            stock: 2,
-            status: "AVAILABLE",
-            campusId: "cmhrvqeo20001hpt83guxipy5",
-            sellerId: "GqF2pBEMJprU8IYOEjhRjtMChntUCI12",
-            createdAt: "...",
-            updatedAt: "...",
-            categoryId: 2,
-            images: [
-              {
-                url: "https://owceerjopcopmqwbsjyu.supabase.co/storage/v1/object/public/product-images/products/GqF2pBEMJprU8IYOEjhRjtMChntUCI12-1762960810303.png",
-              },
-              {
-                url: "https://owceerjopcopmqwbsjyu.supabase.co/storage/v1/object/public/product-images/products/GqF2pBEMJprU8IYOEjhRjtMChntUCI12-1762960811142.png",
-              },
-            ],
-            campus: { name: "Institut Teknologi Bandung" },
-            seller: {
-              name: "Fahri Nr",
-              id: "GqF2pBEMJprU8IYOEjhRjtMChntUCI12",
-            },
-            category: { name: "Pakaian Pria" },
-          },
-        };
+        // const res = {
+        //   data: {
+        //     id: "cmhw5ck0e0001hpu0jwdomruy",
+        //     productName: "Celana Jeans",
+        //     description: "Celana Panjang Ukuran XL",
+        //     price: 10000,
+        //     stock: 2,
+        //     status: "AVAILABLE",
+        //     campusId: "cmhrvqeo20001hpt83guxipy5",
+        //     sellerId: "GqF2pBEMJprU8IYOEjhRjtMChntUCI12",
+        //     createdAt: "...",
+        //     updatedAt: "...",
+        //     categoryId: 2,
+        //     images: [
+        //       {
+        //         url: "https://owceerjopcopmqwbsjyu.supabase.co/storage/v1/object/public/product-images/products/GqF2pBEMJprU8IYOEjhRjtMChntUCI12-1762960810303.png",
+        //       },
+        //       {
+        //         url: "https://owceerjopcopmqwbsjyu.supabase.co/storage/v1/object/public/product-images/products/GqF2pBEMJprU8IYOEjhRjtMChntUCI12-1762960811142.png",
+        //       },
+        //     ],
+        //     campus: { name: "Institut Teknologi Bandung" },
+        //     seller: {
+        //       name: "Fahri Nr",
+        //       id: "GqF2pBEMJprU8IYOEjhRjtMChntUCI12",
+        //     },
+        //     category: { name: "Pakaian Pria" },
+        //   },
+        // };
+        const res = await axios.get(`/api/products/${id}`);
 
         setProduct(res.data);
 
@@ -198,7 +199,7 @@ export default function ProductDetailPage() {
             </div>
 
             <Link
-              href={`/toko/${product.seller.id}`}
+              href={`/profile/${product.seller.id}`}
               className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm transition"
             >
               Kunjungi Toko

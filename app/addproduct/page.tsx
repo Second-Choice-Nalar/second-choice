@@ -5,6 +5,7 @@ import { Upload, Save, Send, X } from "lucide-react";
 import axios from "axios";
 import { Campus, Category } from "../generated/prisma/client";
 import Select from "react-select";
+import { useRouter } from "next/navigation";
 
 type ImagePreview = { file: File; url: string };
 interface SelectOption {
@@ -13,6 +14,8 @@ interface SelectOption {
 }
 
 export default function AddProduct() {
+  const router = useRouter();
+
   const [campusOptions, setCampusOptions] = useState<SelectOption[]>([]);
   const [categoryOptions, setCategoryOptions] = useState<SelectOption[]>([]);
   const [product, setProduct] = useState({
@@ -138,6 +141,9 @@ export default function AddProduct() {
       const response = await axios.post("api/products", formData);
 
       console.log("Produk berhasil di upload");
+
+      const uploaderId = response.data.sellerId;
+      router.push(`/profile/${uploaderId}`);
     } catch (error) {
       console.error("Gagal mempublikasikan produk:", error);
       alert("Gagal mempublikasikan produk. Cek console untuk detail.");
