@@ -25,7 +25,7 @@ export async function GET() {
         location: true,
       },
     });
-
+    console.log(profile);
     return NextResponse.json(profile);
   } catch (err) {
     console.error("GET PROFILE ERROR:", err);

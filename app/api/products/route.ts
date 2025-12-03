@@ -3,10 +3,18 @@ import prisma from "@/lib/prisma";
 import { supabaseService } from "@/lib/supabase-server";
 import { NextResponse } from "next/server";
 
+export const revalidate = 60;
+
 export async function GET() {
   const products = await prisma.product.findMany({
     take: 50,
-    include: { images: true, seller: true, campus: true },
+    include: {
+      images: {
+        take: 1,
+      },
+      seller: true,
+      campus: true,
+    },
   });
 
   return NextResponse.json(products);

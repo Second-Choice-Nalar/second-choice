@@ -88,6 +88,22 @@ export default function ProductDetailPage() {
     );
   }
 
+  async function handleFavorite() {
+    setIsFavorited(!isFavorited);
+    try {
+      const res = await fetch(`/api/products/${id}/favorite`, {
+        method: "POST",
+      });
+
+      if (!res.ok) throw new Error("Gagal favorite");
+
+      const data = await res.json();
+      console.log("Favorited:", data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return (
     <main className="max-w-6xl mx-auto px-6 py-10">
       {/* HEADER WITH BACK BUTTON */}
@@ -160,7 +176,7 @@ export default function ProductDetailPage() {
           {/* ACTION BUTTONS — MOVED TO SEPARATE CARD */}
           <div className="flex gap-3 mt-4">
             <button
-              onClick={() => setIsFavorited(!isFavorited)}
+              onClick={handleFavorite}
               className={`flex-1 py-3 border rounded-lg flex items-center justify-center gap-2 transition ${
                 isFavorited
                   ? "bg-red-50 border-red-300 text-red-500"
@@ -174,7 +190,10 @@ export default function ProductDetailPage() {
               Tambahkan Favorit
             </button>
 
-            <button className="flex-1 py-3 bg-[#4f7f8d] text-white rounded-lg flex items-center justify-center gap-2">
+            <button
+              className="flex-1 py-3 bg-[#4f7f8d] text-white rounded-lg flex items-center justify-center gap-2"
+              onClick={() => router.push("https://wa.me/6281225028952")}
+            >
               <MessageCircle size={18} />
               Chat Penjual
             </button>

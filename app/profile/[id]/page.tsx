@@ -136,7 +136,7 @@ export default function ProfilePage() {
 
             <div className="rounded-xl border p-4 shadow-sm bg-white">
               <Star size={22} className="mx-auto text-gray-700" />
-              <p className="font-semibold text-lg">4.3</p>
+              <p className="font-semibold text-lg">0</p>
               <p className="text-sm text-gray-500">Rating</p>
             </div>
           </div>
@@ -186,7 +186,7 @@ export default function ProfilePage() {
         </div>
       </section>
 
-      {/* FAVORITES */}
+      {/* FAVORITES
       <section className="max-w-5xl mx-auto mt-10 px-6 mb-20">
         <h3 className="font-semibold text-gray-800 text-lg mb-3">Favorit</h3>
 
@@ -218,7 +218,7 @@ export default function ProfilePage() {
             </div>
           ))}
         </div>
-      </section>
+      </section> */}
     </main>
   );
 }
